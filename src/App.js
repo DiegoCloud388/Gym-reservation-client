@@ -4,6 +4,7 @@ import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import NoPage from "./pages/NoPage";
+import SignUp from './pages/SignUp';
 
 export default function App() {
   return (    
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="sign-in" element={<SignIn />} />
+          <Route path="sign-up" element={<SignUp />}/>
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
