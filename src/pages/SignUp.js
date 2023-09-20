@@ -1,3 +1,4 @@
+import React from 'react';
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
 import { Avatar, Box, Button, Container, CssBaseline, Grid, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -17,16 +18,44 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
-    const handleSubmit = (event) => {
+/*function GetTemperature() {    
+    const [weatherForecast, setItems] = useState(null);
+
+    useEffect(() => {
+        fetch('https://localhost:7215/WeatherForecast')
+            .then(response => response.json())
+            .then((result) => {                 
+                console.log(result);
+                setItems(result);
+            })      
+    }, []);   
+    
+    return (
+        <div>
+            {weatherForecast}
+        </div>
+    );
+}*/
+
+export default function SignUp() {    
+    const handleSubmit = (event) => {        
         event.preventDefault();
+        fetch('https://localhost:7215/WeatherForecast')
+            .then(response => response.json())
+            .then((result) => {                 
+                console.log(result);
+            });
+
         const data = new FormData(event.currentTarget);
         console.log({
+            firstName: data.get('firstName'),
+            lastName: data.get('lastName'),
             email: data.get('email'),
             password: data.get('password')
         });
     };
 
+    
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -48,7 +77,7 @@ export default function SignUp() {
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     autoComplete="given-name"
-                                    name="firstName"
+                                    name="firstName"                                    
                                     required
                                     fullWidth
                                     id="firstName"
