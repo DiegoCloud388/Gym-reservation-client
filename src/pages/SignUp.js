@@ -18,44 +18,40 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-/*function GetTemperature() {    
-    const [weatherForecast, setItems] = useState(null);
-
-    useEffect(() => {
-        fetch('https://localhost:7215/WeatherForecast')
-            .then(response => response.json())
-            .then((result) => {                 
-                console.log(result);
-                setItems(result);
-            })      
-    }, []);   
-    
-    return (
-        <div>
-            {weatherForecast}
-        </div>
-    );
-}*/
+const registerUser = async (firstName, lastName, email, password) => {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password
+        })
+    }
+    fetch('https://localhost:7215/api/Account/register-user', requestOptions)
+        .then(response => response.json())
+        .then((resultData) => {        
+            console.log(resultData);
+            
+        })
+        .catch((error) => {
+            console.log(error.message);
+        });
+}
 
 export default function SignUp() {    
     const handleSubmit = (event) => {        
         event.preventDefault();
-        fetch('https://localhost:7215/WeatherForecast')
-            .then(response => response.json())
-            .then((result) => {                 
-                console.log(result);
-            });
-
-        const data = new FormData(event.currentTarget);
-        console.log({
-            firstName: data.get('firstName'),
-            lastName: data.get('lastName'),
-            email: data.get('email'),
-            password: data.get('password')
-        });
+        const inputData = new FormData(event.currentTarget);
+        
+        registerUser( 
+            inputData.get('firstName'), 
+            inputData.get('lastName'), 
+            inputData.get('email'),
+            inputData.get('password'));
     };
 
-    
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">

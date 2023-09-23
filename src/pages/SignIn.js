@@ -2,6 +2,7 @@ import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
 import { Avatar, Box, Button, Container, CssBaseline, Grid, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import MySnackbar from '../components/MySnackbar'
 
 function Copyright(props) {
     return (
@@ -18,15 +19,36 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
+const loginUser = async (email, password) => {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            email: email,
+            password: password
+        })
+    }
+
+    fetch('https://localhost:7215/api/Account/login', requestOptions)
+        .then(response => response.json())
+        .then((resultData) => {
+            console.log(resultData);
+        })
+        .catch((error) => {
+            console.log(error.message);
+        });
+}
+
 export default function SignIn() {
-    
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const inputData = new FormData(event.currentTarget);
+
+        loginUser(
+            inputData.get('email'),
+            inputData.get('password')
+        );
     };
 
     return (
