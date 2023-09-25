@@ -1,21 +1,9 @@
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
 import { Avatar, Box, Button, Container, CssBaseline, Grid, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
-import * as React from 'react';
+import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import MySnackbar from '../components/MySnackbar'
-
-function Copyright(props) {
-    return (
-        <Typography variant='body2' color="text.secondary" align='center' {...props}>
-            {'Copyright ©'}
-            <Link color='inherit' href="https://mui.com/">
-                test.web.com
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import Copyright from '../components/Copyright';
 
 const defaultTheme = createTheme();
 
@@ -39,6 +27,21 @@ const loginUser = async (email, password) => {
         });
 }
 
+const ValidationTextField = styled(TextField)({
+    '& input:valid + fieldset': {
+      borderColor: '#E0E3E7',
+      borderWidth: 1,
+    },
+    '& input:invalid + fieldset': {
+      borderColor: 'red',
+      borderWidth: 1,
+    },
+    '& input:valid:focus + fieldset': {
+      borderLeftWidth: 4,
+      padding: '4px !important', // override inline-style
+    },
+  });
+
 export default function SignIn() {
 
     const handleSubmit = (event) => {
@@ -50,6 +53,18 @@ export default function SignIn() {
             inputData.get('password')
         );
     };
+
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+
+    const handleChangePassword = (event) => {
+       setPassword(event.target.value);
+    };
+
+    const handleChangeEmail = (event) => {
+        setEmail(event.target.value);
+    }
+    
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -71,29 +86,35 @@ export default function SignIn() {
                         Sign In
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-                        <TextField 
-                            margin="normal" 
-                            required 
-                            fullWidth 
-                            id="email" 
+                        <ValidationTextField 
+                            margin="normal"                             
+                            required
+                            type="email"                            
+                            onChange={handleChangeEmail}    
+                            fullWidth     
+                            id="email"                     
                             label="Email Address"
                             name='email'
                             autoComplete="email"
-                            autoFocus>
-                        </TextField>                        
-                        <TextField
+                            autoFocus
+                            value={email}>
+                        </ValidationTextField>                        
+                        <ValidationTextField
                             margin="normal"
                             required
-                            type="password"                            
-                            fullWidth
+                            type="password"        
+                            onChange={handleChangePassword}                                                      
+                            fullWidth                            
                             id="password"
                             label="Password"
                             name='password'
-                            autoComplete="current-password">
-                        </TextField>
+                            autoComplete="current-password"
+                            value={password}>
+                        </ValidationTextField>
                         <Button
                             type="submit"
                             fullWidth
+                            disabled={!email || !password}  
                             variant="contained"
                             sx={{mt: 3, mb: 2}}>
                                 Sign In                              

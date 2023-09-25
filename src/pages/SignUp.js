@@ -2,19 +2,7 @@ import React from 'react';
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
 import { Avatar, Box, Button, Container, CssBaseline, Grid, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { Link } from "react-router-dom";
-
-function Copyright(props) {
-    return (
-        <Typography variant='body2' color="text.secondary" align='center' {...props}>
-            {'Copyright ©'}
-            <Link color='inherit' href="https://mui.com/">
-                test.web.com
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import Copyright from '../components/Copyright'
 
 const defaultTheme = createTheme();
 
@@ -33,7 +21,6 @@ const registerUser = async (firstName, lastName, email, password) => {
         .then(response => response.json())
         .then((resultData) => {        
             console.log(resultData);
-            
         })
         .catch((error) => {
             console.log(error.message);
