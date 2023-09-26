@@ -1,57 +1,44 @@
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
-import { Avatar, Box, Button, Container, CssBaseline, Grid, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Avatar, Box, Button, Container, CssBaseline, Grid, ThemeProvider, Typography, createTheme } from '@mui/material';
 import React, { useState } from 'react';
-import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import Copyright from '../components/Copyright';
+import ValidationTextField from '../components/ValidationTextField';
+
+import AuthService from '../services/auth.service';
 
 const defaultTheme = createTheme();
-
-const loginUser = async (email, password) => {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            email: email,
-            password: password
-        })
-    }
-
-    fetch('https://localhost:7215/api/Account/login', requestOptions)
-        .then(response => response.json())
-        .then((resultData) => {
-            console.log(resultData);
-        })
-        .catch((error) => {
-            console.log(error.message);
-        });
-}
-
-const ValidationTextField = styled(TextField)({
-    '& input:valid + fieldset': {
-      borderColor: '#E0E3E7',
-      borderWidth: 1,
-    },
-    '& input:invalid + fieldset': {
-      borderColor: 'red',
-      borderWidth: 1,
-    },
-    '& input:valid:focus + fieldset': {
-      borderLeftWidth: 4,
-      padding: '4px !important', // override inline-style
-    },
-  });
 
 export default function SignIn() {
 
     const handleSubmit = (event) => {
+        
         event.preventDefault();
+        this.setState({
+            message: "",
+            loading: true
+        });
+
         const inputData = new FormData(event.currentTarget);
 
-        loginUser(
-            inputData.get('email'),
-            inputData.get('password')
-        );
+        AuthService.login(inputData.get('email'), inputData.get('password')).then(
+            () => {
+                console.log(inputData.get('email'))
+            },
+            error => {
+                const responseMessage = 
+                    (error.response && 
+                        error.response.data && 
+                        error.response.data.message) ||
+                    error.message ||
+                    error.toString();
+
+                this.setState({
+                    loading: false,
+                    message: responseMessage
+                });
+            }
+        )
     };
 
     const [password, setPassword] = useState('');
@@ -64,7 +51,6 @@ export default function SignIn() {
     const handleChangeEmail = (event) => {
         setEmail(event.target.value);
     }
-    
 
     return (
         <ThemeProvider theme={defaultTheme}>
