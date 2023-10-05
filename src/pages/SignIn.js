@@ -1,20 +1,41 @@
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
-import { Avatar, Box, Button, Container, CssBaseline, Grid, ThemeProvider, Typography, createTheme } from '@mui/material';
+import { Avatar, Box, Button, Container, CssBaseline, Grid, ThemeProvider, Typography, TextField, Snackbar, Alert, createTheme } from '@mui/material';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Copyright from '../components/Copyright';
-import ValidationTextField from '../components/ValidationTextField';
+import { Link, useNavigate } from 'react-router-dom';
 
+import Copyright from '../components/Copyright';
 import AuthService from '../services/auth.service';
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
 
-    const handleSubmit = (event) => {
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [responseMessage, setState] = useState('');
+    const [open, setOpen] = React.useState(false);
+
+    function handleChangePassword(event) {
+       setPassword(event.target.value);
+    };
+
+    function handleChangeEmail(event) {
+        setEmail(event.target.value);
+    }
+
+    const navigate = useNavigate();
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+      };
+
+    function handleSubmit(event) {
         
         event.preventDefault();
-        this.setState({
+        setState({
             message: "",
             loading: true
         });
@@ -23,34 +44,24 @@ export default function SignIn() {
 
         AuthService.login(inputData.get('email'), inputData.get('password')).then(
             () => {
-                console.log(inputData.get('email'))
+                setOpen(true);   
+                navigate("/profile");
             },
             error => {
-                const responseMessage = 
+                responseMessage = 
                     (error.response && 
                         error.response.data && 
                         error.response.data.message) ||
                     error.message ||
                     error.toString();
 
-                this.setState({
+                setState({
                     loading: false,
                     message: responseMessage
                 });
             }
         )
     };
-
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-
-    const handleChangePassword = (event) => {
-       setPassword(event.target.value);
-    };
-
-    const handleChangeEmail = (event) => {
-        setEmail(event.target.value);
-    }
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -72,7 +83,7 @@ export default function SignIn() {
                         Sign In
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-                        <ValidationTextField 
+                        <TextField 
                             margin="normal"                             
                             required
                             type="email"                            
@@ -84,8 +95,8 @@ export default function SignIn() {
                             autoComplete="email"
                             autoFocus
                             value={email}>
-                        </ValidationTextField>                        
-                        <ValidationTextField
+                        </TextField>                        
+                        <TextField
                             margin="normal"
                             required
                             type="password"        
@@ -96,7 +107,7 @@ export default function SignIn() {
                             name='password'
                             autoComplete="current-password"
                             value={password}>
-                        </ValidationTextField>
+                        </TextField>
                         <Button
                             type="submit"
                             fullWidth
@@ -121,6 +132,9 @@ export default function SignIn() {
                 </Box>
                 <Copyright sx={{mt: 8, mb: 4}}/>
             </Container>
-        </ThemeProvider>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} variant="filled" severity="success" sx={{ width: '100%' }}>Hello world</Alert>
+            </Snackbar>
+        </ThemeProvider>        
     )
 }

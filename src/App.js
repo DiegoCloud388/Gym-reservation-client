@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import NoPage from "./pages/NoPage";
 import SignUp from './pages/SignUp';
+import Profile from './pages/Profile';
 
 export default function App() {
   return (    
@@ -14,6 +15,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="sign-in" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />}/>
+          <Route path="profile" element={<Profile />}/>
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
