@@ -2,16 +2,16 @@ import { useEffect, useState } from "react"
 import AuthService from '../services/auth.service';
 
 export default function Profile() {
-    const [state, setState] = useState(false);
+    const [state, setState] = useState('');
 
     useEffect(() => {
         const currentUser = AuthService.getCurrentUser();
 
         if(!currentUser)
-        setState(true);
+        setState(currentUser);
     });
 
     return (
-        <h1>{currentUser}</h1>
+        <h1>{state}</h1>
     )
 }

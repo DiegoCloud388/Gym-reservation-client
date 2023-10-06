@@ -9,8 +9,9 @@ class AuthService {
             password
         })
         .then(response => {
-            if(response.data.token) {
-                localStorage.setItem("user", JSON.stringify(response.data));
+            const token = response.data.accessToken;
+            if(token) {
+                localStorage.setItem("token", token);
             }
 
             return response.data;
@@ -31,10 +32,11 @@ class AuthService {
     }
 
     getCurrentUser() {
-        return JSON.parse(localStorage.getItem('user'));
+        return JSON.parse(localStorage.getItem('token'));
     }
 }
 
 const authService = new AuthService();
 
 export default authService;
+

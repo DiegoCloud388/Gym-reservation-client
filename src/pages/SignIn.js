@@ -1,10 +1,12 @@
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
 import { Avatar, Box, Button, Container, CssBaseline, Grid, ThemeProvider, Typography, TextField, Snackbar, Alert, createTheme } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Copyright from '../components/Copyright';
+
 import AuthService from '../services/auth.service';
+import AuthHeaderService from '../services/auth-header';
 
 const defaultTheme = createTheme();
 
@@ -12,8 +14,11 @@ export default function SignIn() {
 
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [responseMessage, setState] = useState('');
-    const [open, setOpen] = React.useState(false);
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+    useEffect(() => {
+        AuthHeaderService();
+    });
 
     function handleChangePassword(event) {
        setPassword(event.target.value);
@@ -29,38 +34,19 @@ export default function SignIn() {
         if (reason === 'clickaway') {
           return;
         }
-        setOpen(false);
+        setOpenSnackbar(false);
       };
 
-    function handleSubmit(event) {
-        
+    function handleSubmit(event) {        
         event.preventDefault();
-        setState({
-            message: "",
-            loading: true
-        });
 
         const inputData = new FormData(event.currentTarget);
 
         AuthService.login(inputData.get('email'), inputData.get('password')).then(
-            () => {
-                setOpen(true);   
+            () => {                
+                setOpenSnackbar(true);   
                 navigate("/profile");
-            },
-            error => {
-                responseMessage = 
-                    (error.response && 
-                        error.response.data && 
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-
-                setState({
-                    loading: false,
-                    message: responseMessage
-                });
-            }
-        )
+            }).catch(error => console.log(error));
     };
 
     return (
@@ -132,7 +118,7 @@ export default function SignIn() {
                 </Box>
                 <Copyright sx={{mt: 8, mb: 4}}/>
             </Container>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} variant="filled" severity="success" sx={{ width: '100%' }}>Hello world</Alert>
             </Snackbar>
         </ThemeProvider>        
