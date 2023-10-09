@@ -1,12 +1,12 @@
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
 import { Avatar, Box, Button, Container, CssBaseline, Grid, ThemeProvider, Typography, TextField, Snackbar, Alert, createTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import Copyright from '../components/Copyright';
 
 import AuthService from '../services/auth.service';
-import AuthHeaderService from '../services/auth-header';
+import { useEffect } from 'react';
 
 const defaultTheme = createTheme();
 
@@ -14,11 +14,11 @@ export default function SignIn() {
 
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const [openSuccSnackbar, setOpenSuccSnackbar] = React.useState(false);
+    const [openErrSnackbar, setOpenErrSnackbar] = React.useState(false);
 
-    useEffect(() => {
-        AuthHeaderService();
-    });
+    const now = new Date();
+    const dateTimeNow = now.toISOString();
 
     function handleChangePassword(event) {
        setPassword(event.target.value);
@@ -28,13 +28,18 @@ export default function SignIn() {
         setEmail(event.target.value);
     }
 
+    useEffect(() => {
+        localStorage.clear();
+    });
+
     const navigate = useNavigate();
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
           return;
         }
-        setOpenSnackbar(false);
+        setOpenSuccSnackbar(false);
+        setOpenErrSnackbar(false);
       };
 
     function handleSubmit(event) {        
@@ -42,11 +47,16 @@ export default function SignIn() {
 
         const inputData = new FormData(event.currentTarget);
 
-        AuthService.login(inputData.get('email'), inputData.get('password')).then(
-            () => {                
-                setOpenSnackbar(true);   
-                navigate("/profile");
-            }).catch(error => console.log(error));
+        AuthService.login(
+            inputData.get('email'), 
+            inputData.get('password')
+        ).then((response) => {
+            if (response.accessToken !== '' && response.expiration >= dateTimeNow) {
+                navigate('/');
+            } else {
+                setOpenErrSnackbar(true);
+            }      
+        }).catch((error) => console.log(error));            
     };
 
     return (
@@ -118,8 +128,11 @@ export default function SignIn() {
                 </Box>
                 <Copyright sx={{mt: 8, mb: 4}}/>
             </Container>
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} variant="filled" severity="success" sx={{ width: '100%' }}>Hello world</Alert>
+            <Snackbar open={openSuccSnackbar} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} variant="filled" severity="success" sx={{ width: '100%' }}>User was successful sign in.</Alert>
+            </Snackbar>
+            <Snackbar open={openErrSnackbar} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} variant="filled" severity="error" sx={{ width: '100%' }}>User cannot successful sign in.</Alert>
             </Snackbar>
         </ThemeProvider>        
     )

@@ -10,8 +10,10 @@ class AuthService {
         })
         .then(response => {
             const token = response.data.accessToken;
+            const expiration = response.data.expiration;
             if(token) {
                 localStorage.setItem("token", token);
+                localStorage.setItem("expiration", expiration);
             }
 
             return response.data;
@@ -19,7 +21,7 @@ class AuthService {
     }
 
     logout() {
-        localStorage.removeItem("user");
+        localStorage.removeItem("token");
     }
 
     register(firstName, lastName, email, password) {
@@ -32,7 +34,7 @@ class AuthService {
     }
 
     getCurrentUser() {
-        return JSON.parse(localStorage.getItem('token'));
+        return localStorage.getItem('token');
     }
 }
 

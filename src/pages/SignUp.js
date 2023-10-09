@@ -1,23 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
-import { Avatar, Box, Button, Container, CssBaseline, Grid, ThemeProvider, Typography, createTheme } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Avatar, Alert, Box, Button, Container, CssBaseline, Grid, Snackbar, ThemeProvider, TextField, Typography, createTheme } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 
 import Copyright from '../components/Copyright'
-import ValidationTextField from '../components/ValidationTextField';
 
 import AuthService from '../services/auth.service';
-import { useState } from 'react';
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {    
+export default function SignUp() {     
+
     const handleSubmit = (event) => {        
         event.preventDefault();
-        this.setState({
-            message: "",
-            loading: true
-        });
 
         const inputData = new FormData(event.currentTarget);
 
@@ -26,32 +21,30 @@ export default function SignUp() {
             inputData.get('lastName'), 
             inputData.get('email'),
             inputData.get('password')
-        ).then(
-            () => {
-                console.log(inputData.get('firstName'));
-                console.log(inputData.get('lastName'));
-                console.log(inputData.get('email'));                
-            },            
-            error => {
-                const responseMessage = 
-                    (error.response && 
-                        error.response.data && 
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-
-                this.setState({
-                    loading: false,
-                    message: responseMessage
-                });
+        ).then((response) => {
+            if(response.email !== '') {
+                setOpenSuccSnackbar(true);
+                navigate('/sign-in');
+            } else {
+                setOpenErrSnackbar(true);
             }
-        )        
+        }).catch(error => console.log(error));                      
     };
     
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const [openSuccSnackbar, setOpenSuccSnackbar] = React.useState(false);
+    const [openErrSnackbar, setOpenErrSnackbar] = React.useState(false);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpenSuccSnackbar(false);
+        setOpenErrSnackbar(false);
+      };
 
     const handleFirstNameChange = (event) => {
         setFirstName(event.target.value);
@@ -68,6 +61,8 @@ export default function SignUp() {
     const handleChangePassword = (event) => {
         setPassword(event.target.value);
      };
+
+    const navigate = useNavigate();
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -88,7 +83,7 @@ export default function SignUp() {
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3}}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                                <ValidationTextField
+                                <TextField
                                     autoComplete="given-name"
                                     name="firstName"                                    
                                     required
@@ -101,7 +96,7 @@ export default function SignUp() {
                                 />                                 
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <ValidationTextField 
+                                <TextField 
                                     required
                                     fullWidth
                                     onChange={handleLastNameChange}
@@ -113,7 +108,7 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <ValidationTextField
+                                <TextField
                                     required
                                     fullWidth
                                     onChange={handleChangeEmail}
@@ -125,7 +120,7 @@ export default function SignUp() {
                                 />                                
                             </Grid>
                             <Grid item xs={12}>
-                                <ValidationTextField
+                                <TextField
                                     margin="normal"
                                     required
                                     onChange={handleChangePassword}
@@ -158,6 +153,12 @@ export default function SignUp() {
                 </Box>
                 <Copyright sx={{ mt: 5}}/>
             </Container>
+            <Snackbar open={openSuccSnackbar} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} variant="filled" severity="success" sx={{ width: '100%' }}>User successful create account.</Alert>
+            </Snackbar>
+            <Snackbar open={openErrSnackbar} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} variant="filled" severity="error" sx={{ width: '100%' }}>User cannot create account.</Alert>
+            </Snackbar>
         </ThemeProvider>        
     );
 }

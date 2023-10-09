@@ -7,7 +7,12 @@ import NoPage from "./pages/NoPage";
 import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
 
+import AuthHeaderService from '../src/services/auth-header';
+
 export default function App() {
+
+  AuthHeaderService();
+
   return (    
     <BrowserRouter>
       <Routes>
