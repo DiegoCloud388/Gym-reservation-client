@@ -1,6 +1,5 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import NoPage from "./pages/NoPage";
@@ -9,6 +8,7 @@ import Profile from './pages/Profile';
 import Paperbase from './pages/Paperbase';
 
 import AuthHeaderService from '../src/services/auth-header';
+import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
 
@@ -17,14 +17,16 @@ export default function App() {
   return (    
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="sign-in" element={<SignIn />} />
-          <Route path="sign-up" element={<SignUp />}/>
-          <Route path="profile" element={<Profile />}/>
-          <Route path="paperbase" element={<Paperbase />}/>
-          <Route path="*" element={<NoPage />} />
-        </Route>
+        <Route path="/" element={<Home />} />
+        <Route path="sign-in" element={<SignIn />} />
+        <Route path="sign-up" element={<SignUp />}/>
+        <Route path="profile" element={<Profile />}/>
+        <Route path="paperbase" element={
+          <ProtectedRoute>
+            <Paperbase/>
+          </ProtectedRoute>
+        }/>
+        <Route path="*" element={<NoPage />} />
       </Routes>
     </BrowserRouter>
   );

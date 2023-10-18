@@ -1,7 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import { AppBar, CssBaseline, GlobalStyles, Toolbar, Typography, createTheme } from "@mui/material";
-import Link  from '@mui/material/Link';
-import Button from '@mui/material/Button';
+import { AppBar, Button, CssBaseline, GlobalStyles, Link, Toolbar, Typography, createTheme } from "@mui/material";
 import { Outlet } from "react-router-dom";
 
 const defaultTheme = createTheme();

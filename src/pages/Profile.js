@@ -9,7 +9,7 @@ export default function Profile() {
 
         if(!currentUser)
         setState(currentUser);
-    });
+    },[]);
 
     return (
         <h1>{state}</h1>

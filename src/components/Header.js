@@ -1,14 +1,28 @@
-import { AppBar, Avatar, Button, Grid, IconButton, Link, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Avatar, Button, Grid, IconButton, Link, Menu, MenuItem, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationIcon from '@mui/icons-material/Notifications';
 import HelpIcon from '@mui/icons-material/Help';
 import * as React from 'react';
+import { useNavigate } from "react-router-dom";
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
 export default function Header(props) {
     const { onDrawerToggle } = props;
+    const navigate = useNavigate();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    } ;
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const handleCloseAndLogout = () => {
+        localStorage.clear();
+        navigate('/sign-in');
+    }
 
     return (
         <React.Fragment>
@@ -49,9 +63,12 @@ export default function Header(props) {
                             </Tooltip>
                         </Grid>
                         <Grid item>
-                            <IconButton color="inherit" sx={{ p: 0.5 }}>
+                            <IconButton aria-haspopup="true" color="inherit" sx={{ p: 0.5 }} onClick={handleClick}>
                                 <Avatar src="/1-sm.jpeg" alt="My Avatar"/>
                             </IconButton>
+                            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>                                
+                                <MenuItem onClick={handleCloseAndLogout}>Logout</MenuItem>
+                            </Menu>
                         </Grid>
                     </Grid>
                 </Toolbar>

@@ -31,10 +31,10 @@ export default function SignUp() {
         }).catch(error => console.log(error));                      
     };
     
-    const [firstName, setFirstName] = useState();
-    const [lastName, setLastName] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [openSuccSnackbar, setOpenSuccSnackbar] = React.useState(false);
     const [openErrSnackbar, setOpenErrSnackbar] = React.useState(false);
 
