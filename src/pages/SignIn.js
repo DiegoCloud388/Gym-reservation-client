@@ -52,7 +52,7 @@ export default function SignIn() {
             inputData.get('password')
         ).then((response) => {
             if (response.accessToken !== '' && response.expiration >= dateTimeNow) {
-                navigate('/');
+                navigate('/paperbase');
             } else {
                 setOpenErrSnackbar(true);
             }      

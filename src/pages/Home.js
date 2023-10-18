@@ -1,19 +1,22 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import logo from './logo.svg';
+import { AppBar, Container, CssBaseline, ThemeProvider, Toolbar, Typography, createTheme, Button } from '@mui/material'
 import './Home.css';
 import { useEffect } from 'react';
 
-function Home() {
+export default function Home() {
 
   const now = new Date();
   const dateTimeNow = now.toISOString();
+
+  const defaultTheme = createTheme();
 
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem('token');
     const expiration = localStorage.getItem('expiration');
     if(token==='' || token ===null || expiration <= dateTimeNow ) {
-      navigate('/sign-in');
+      navigate('/');
     }
   })
 
@@ -33,8 +36,6 @@ function Home() {
           Learn React
         </a>
       </header>
-    </div>
-  );
+    </div>   
+  ); 
 }
-
-export default Home;

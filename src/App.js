@@ -6,6 +6,7 @@ import SignIn from "./pages/SignIn";
 import NoPage from "./pages/NoPage";
 import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
+import Paperbase from './pages/Paperbase';
 
 import AuthHeaderService from '../src/services/auth-header';
 
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="sign-in" element={<SignIn />} />
           <Route path="sign-up" element={<SignUp />}/>
           <Route path="profile" element={<Profile />}/>
+          <Route path="paperbase" element={<Paperbase />}/>
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
