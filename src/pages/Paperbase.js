@@ -1,10 +1,10 @@
-import { Box, CssBaseline, createTheme, useMediaQuery } from '@mui/material';
 import * as React from 'react';
-import { ThemeProvider } from 'styled-components';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Box, CssBaseline, useMediaQuery } from '@mui/material';
 import Navigator from '../components/Navigator';
 import Header from '../components/Header';
-import Content from '../components/Content';
 import Copyright from '../components/Copyright';
+import Reservation from './Reservation';
 
 let theme = createTheme({
     palette: {
@@ -181,7 +181,7 @@ export default function Paperbase() {
                 <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                     <Header onDrawerToggle={handleDrawerToggler}/>
                     <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1'}}>
-                        <Content/>
+                        <Reservation/>
                     </Box>
                     <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
                         <Copyright/>

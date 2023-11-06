@@ -6,12 +6,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 export default function Content() {
     return (
         <Paper sx={{ maxWidth: 936, margin: 'auto', overflow: 'hidden' }}>
-            <AppBar
-                position="static"
-                color="default"
-                elevation={0}
-                sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
-            >
+            <AppBar position="static" color="default" elevation={0} sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}>
                 <Toolbar>
                     <Grid container spacing={2} alignItems="center">
                         <Grid item>

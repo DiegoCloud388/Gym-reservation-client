@@ -16,12 +16,13 @@ export default function Home() {
 
     if(!token || expiration <= dateTimeNow ) {
       navigate('/');
-      showLayout(true);
+      showLayout(true);      
     }
     else {
       showLayout(false);
+      localStorage.clear();
     }    
-  },[dateTimeNow, navigate]);
+  },[isLoggedIn, navigate]);
 
   return (
     <div className="header">

@@ -1,5 +1,5 @@
 import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBox';
-import { Avatar, Box, Button, Container, CssBaseline, Grid, ThemeProvider, Typography, TextField, Snackbar, Alert, createTheme } from '@mui/material';
+import { Avatar, Box, Button, Container, CssBaseline, Grid, ThemeProvider, Typography, TextField, Snackbar, Alert, createTheme, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -14,8 +14,8 @@ export default function SignIn() {
 
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [openSuccSnackbar, setOpenSuccSnackbar] = React.useState(false);
-    const [openErrSnackbar, setOpenErrSnackbar] = React.useState(false);
+    const [openErrSnackbar, setOpenErrSnackbar] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const now = new Date();
     const dateTimeNow = now.toISOString();
@@ -38,11 +38,12 @@ export default function SignIn() {
         if (reason === 'clickaway') {
           return;
         }
-        setOpenSuccSnackbar(false);
         setOpenErrSnackbar(false);
+        setLoading(false);
       };
 
     function handleSubmit(event) {        
+        setLoading((prevLoading) => !prevLoading);
         event.preventDefault();
 
         const inputData = new FormData(event.currentTarget);
@@ -51,7 +52,7 @@ export default function SignIn() {
             inputData.get('email'), 
             inputData.get('password')
         ).then((response) => {
-            if (response.accessToken !== '' && response.expiration >= dateTimeNow) {
+            if (response.accessToken !== '' && response.expiration >= dateTimeNow) {       
                 navigate('/paperbase');
             } else {
                 setOpenErrSnackbar(true);
@@ -104,14 +105,29 @@ export default function SignIn() {
                             autoComplete="current-password"
                             value={password}>
                         </TextField>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            disabled={!email || !password}  
-                            variant="contained"
-                            sx={{mt: 3, mb: 2}}>
-                                Sign In                              
-                        </Button>
+                        <Box sx={{ m: 1, position: 'relative' }}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                disabled={!email || !password || loading}
+                                variant="contained"
+                                sx={{mt: 3, mb: 2}}>
+                                    Sign In                              
+                            </Button>
+                            {loading && (
+                                <CircularProgress
+                                    size={24}
+                                    sx={{
+                                        color: 'primary',
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        marginTop: '-12px',
+                                        marginLeft: '-12px'
+                                    }}
+                                />
+                            )}
+                        </Box>                        
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
@@ -128,9 +144,6 @@ export default function SignIn() {
                 </Box>
                 <Copyright sx={{mt: 8, mb: 4}}/>
             </Container>
-            <Snackbar open={openSuccSnackbar} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} variant="filled" severity="success" sx={{ width: '100%' }}>User was successful sign in.</Alert>
-            </Snackbar>
             <Snackbar open={openErrSnackbar} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} variant="filled" severity="error" sx={{ width: '100%' }}>User cannot successful sign in.</Alert>
             </Snackbar>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PeopleIcon from '@mui/icons-material/People';
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import PublicIcon from '@mui/icons-material/Public';
@@ -10,12 +9,13 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import PhonelinkSetupIcon from '@mui/icons-material/PhonelinkSetup';
 import HomeIcon from '@mui/icons-material/Home';
 import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { SportsGymnasticsTwoTone } from '@mui/icons-material';
 
 const categories = [
     {
         id: 'Build',
         children: [
-            { id: 'Authentication', icon: <PeopleIcon/>, active: true },
+            { id: 'Gym reservation', icon: <SportsGymnasticsTwoTone/>, active: true },
             { id: 'Database', icon: <DnsRoundedIcon /> },
             { id: 'Storage', icon: <PermMediaOutlinedIcon /> },
             { id: 'Hosting', icon: <PublicIcon /> },

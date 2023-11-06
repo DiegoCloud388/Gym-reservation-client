@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Button, Grid, IconButton, Link, Menu, MenuItem, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Avatar, Button, Grid, IconButton, Link, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationIcon from '@mui/icons-material/Notifications';
@@ -78,7 +78,7 @@ export default function Header(props) {
                     <Grid container alignItems="center" spacing={1}>
                         <Grid item xs>
                             <Typography color="inherit" variant="h5" component="h1">
-                                Authentication
+                                Gym reservation
                             </Typography>
                         </Grid>
                         <Grid item>
@@ -101,14 +101,14 @@ export default function Header(props) {
                     </Grid>
                 </Toolbar>            
             </AppBar>
-            <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
+            {/*<AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
                 <Tabs value={0} textColor="inherit">
                     <Tab label="Users" />
                     <Tab label="Sign-in method" />
                     <Tab label="Templates" />
                     <Tab label="Usage" />
                 </Tabs>
-            </AppBar>
+            </AppBar>*/}
         </React.Fragment>        
     );    
 }
