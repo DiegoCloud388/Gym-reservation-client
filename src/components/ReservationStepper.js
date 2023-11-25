@@ -1,7 +1,8 @@
 import { Box, Button, Step, StepLabel, Stepper, Typography } from '@mui/material';
 import * as React from 'react';
+import ReservationFirstStep from './ReservationFirstStep';
 
-const steps = ['Choose service', 'Choose date', 'Completion of data']
+const steps = ['Choose date and time', 'Choose service', 'Completion of data']
 
 export default function HorizontalLinearStepper() {
     const [activeStep, setActiveStep] = React.useState(0);
@@ -43,7 +44,11 @@ export default function HorizontalLinearStepper() {
                 </React.Fragment>
             ) : (
                 <React.Fragment>
-                    <Typography sx={{ mt: 2, mb: 1 }}>Krok {activeStep + 1}</Typography>
+                    <Typography sx={{ mt: 2, mb: 1 }}>
+                        {activeStep === 0 &&
+                            <ReservationFirstStep></ReservationFirstStep>
+                        }
+                    </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2}}>
                         <Button
                             color="inherit"
