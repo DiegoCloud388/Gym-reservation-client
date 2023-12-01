@@ -3,15 +3,13 @@ import { Grid } from "@mui/material";
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import dayjs from 'dayjs';
 import { DataGrid } from '@mui/x-data-grid';
-
-import ReservationService from '../services/reservation.service'
+import { darken, lighten, styled } from '@mui/material/styles';
 
 const columns = [
     {
         field: 'timeFrom',
         headerName: 'Od',
-        width: 150,
-        editable: true
+        width: 150
     },
     {
         field: 'timeTo',
@@ -41,36 +39,81 @@ const rows = [
     { id: 12, timeFrom: '19:00', timeTo: '19:30', state: false }
   ];
 
-function handleSubmit(event) {
-  ReservationService.createNewReservation(
-    
+/*function CustomFooterComponent(props) {
+  return (
+    <Box sx={{ p: 1, display: 'flex' }}>
+      Selected: {props.state}
+    </Box>
   )
-}
+}*/
+
+const getBackgroundColor = (color, mode) => 
+  mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.7);
+
+const getHoverBackgroundColor = (color, mode) =>
+  mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
+
+const StyleDataGrid = styled(DataGrid)(({theme}) => ({  
+    '& .super-app-theme--false': {
+      backgroundColor: getBackgroundColor(
+        theme.palette.grey[500], 
+        theme.palette.mode),
+    '&:hover': {
+      backgroundColor: getHoverBackgroundColor(
+        theme.palette.grey[500],
+        theme.palette.mode,
+      ),
+    },
+  }
+}));
 
 export default function ReservationFirstStep() {
-    return(
-        <Grid container alignItems="left" spacing={2}>
-            <Grid item xs={3}>
-                <StaticDatePicker                     
-                    defaultValue={dayjs(new Date())}
-                    displayStaticWrapperAs="desktop" 
-                    slotProps={{
-                        toolbar: { toolbarFormat: 'ddd DD MMMM', hidden: false },
-                    }}
-                />
-            </Grid>
-            <Grid item xs={9}>     
-                <DataGrid rows={rows} columns={columns} sx={{ backgroundColor: 'white'}}
-                        initialState={{
-                            pagination: {
-                              paginationModel: {
-                                pageSize: 8,
-                              },
-                            },
-                          }}
-                        pageSizeOptions={[5]}                          
-                        checkboxSelection />            
-            </Grid>
-        </Grid>
-    );
+
+  const [date, setDate] = React.useState(Date());
+  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+
+  return(
+    <Grid container alignItems="left" spacing={2}>
+      <Grid item sm={0} md={0} xl={3}>
+        <StaticDatePicker              
+          onChange={(newDate) => setDate(newDate)}
+          date={date}
+          defaultValue={dayjs(date)}
+          displayStaticWrapperAs="desktop" 
+          slotProps={{
+            toolbar: { toolbarFormat: 'ddd DD MMMM', hidden: false },
+          }}
+        />
+      </Grid>
+      <Grid item sm={0} md={12} xl={9}>     
+        <StyleDataGrid rows={rows} columns={columns}                             
+          checkboxSelection 
+          sx={{ 
+            backgroundColor: 'white'
+          }} 
+          getRowClassName={(params) => 
+            `super-app-theme--${params.row.state}`
+          }
+          isRowSelectable={(params) => 
+            params.row.state === true
+          }
+          onRowSelectionModelChange={(newRowSelectionModel) => {
+            setRowSelectionModel(newRowSelectionModel);
+          }}
+          rowSelectionModel={rowSelectionModel}
+          /*slots={{
+            footer: CustomFooterComponent,
+          }}
+          slotProps={{
+            footer: { select }
+          }}
+          onRowClick={() => 
+            setSelect((params) =>
+              params.row.state
+            )
+          }*/
+        />            
+      </Grid>
+    </Grid>
+  );
 }

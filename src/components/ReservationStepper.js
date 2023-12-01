@@ -44,11 +44,6 @@ export default function HorizontalLinearStepper() {
                 </React.Fragment>
             ) : (
                 <React.Fragment>
-                    <Typography sx={{ mt: 2, mb: 1 }}>
-                        {activeStep === 0 &&
-                            <ReservationFirstStep></ReservationFirstStep>
-                        }
-                    </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2}}>
                         <Button
                             color="inherit"
@@ -62,6 +57,12 @@ export default function HorizontalLinearStepper() {
                             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                         </Button>
                     </Box>
+                    <Typography component='div' sx={{ mt: 2, mb: 1 }}>
+                        {activeStep === 0 &&
+                            <ReservationFirstStep></ReservationFirstStep>
+                        }
+                    </Typography>
+
                 </React.Fragment>
             )}
         </Box>

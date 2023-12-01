@@ -17,7 +17,7 @@ export default function SignIn() {
     const [openErrSnackbar, setOpenErrSnackbar] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const now = new Date();
+    let now = new Date();
     const dateTimeNow = now.toISOString();
 
     function handleChangePassword(event) {

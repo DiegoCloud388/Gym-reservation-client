@@ -22,7 +22,7 @@ export default function Home() {
       showLayout(false);
       localStorage.clear();
     }    
-  },[dateTimeNow, isLoggedIn, navigate]);
+  },[isLoggedIn]);
 
   return (
     <div className="header">
