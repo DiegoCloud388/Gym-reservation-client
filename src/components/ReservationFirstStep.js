@@ -64,7 +64,7 @@ export default function ReservationFirstStep() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await ReservationService.getReservationForSelectedDay(date);
+        const result = await ReservationService.getReservationForSelectedDay(date.format());
         setTableData(result.data);
       } catch (error) {
 
