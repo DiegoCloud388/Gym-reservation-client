@@ -6,6 +6,11 @@ const steps = ['Choose date and time', 'Choose service', 'Completion of data']
 
 export default function HorizontalLinearStepper() {
     const [activeStep, setActiveStep] = React.useState(0);
+    const [data, setData] = React.useState({
+        stepOneData: '',
+        stepTwoData: '',
+        stepThreeData: ''
+    });
     
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);

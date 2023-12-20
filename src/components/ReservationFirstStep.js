@@ -4,15 +4,18 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import dayjs from 'dayjs';
 import { DataGrid } from '@mui/x-data-grid';
 import { darken, lighten, styled } from '@mui/material/styles';
+import { useEffect } from 'react';
+
+import ReservationService from '../services/reservation.service';
 
 const columns = [
     {
-        field: 'timeFrom',
+        field: 'startTime',
         headerName: 'Od',
         width: 150
     },
     {
-        field: 'timeTo',
+        field: 'endTime',
         headerName: 'Do',
         width: 150
     },
@@ -22,21 +25,6 @@ const columns = [
         width: 200,
         type: 'boolean'
     }
-  ];
-
-const rows = [
-    { id: 1, timeFrom: '08:00', timeTo: '08:30', state: false },
-    { id: 2, timeFrom: '09:00', timeTo: '09:30', state: true },
-    { id: 3, timeFrom: '10:00', timeTo: '10:30', state: false },
-    { id: 4, timeFrom: '11:00', timeTo: '11:30', state: false },
-    { id: 5, timeFrom: '12:00', timeTo: '12:30', state: false },
-    { id: 6, timeFrom: '13:00', timeTo: '13:30', state: true },
-    { id: 7, timeFrom: '14:00', timeTo: '14:30', state: true },
-    { id: 8, timeFrom: '15:00', timeTo: '15:30', state: false },
-    { id: 9, timeFrom: '16:00', timeTo: '16:30', state: false },
-    { id: 10, timeFrom: '17:00', timeTo: '17:30', state: false },
-    { id: 11, timeFrom: '18:00', timeTo: '18:30', state: true },
-    { id: 12, timeFrom: '19:00', timeTo: '19:30', state: false }
   ];
 
 /*function CustomFooterComponent(props) {
@@ -71,6 +59,19 @@ export default function ReservationFirstStep() {
 
   const [date, setDate] = React.useState(Date());
   const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
+  const [tableData, setTableData] = React.useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await ReservationService.getReservationForSelectedDay(date);
+        setTableData(result.data);
+      } catch (error) {
+
+      }
+    };
+    fetchData();
+  }, date, []);
 
   return(
     <Grid container alignItems="left" spacing={2}>
@@ -86,7 +87,7 @@ export default function ReservationFirstStep() {
         />
       </Grid>
       <Grid item sm={0} md={12} xl={9}>     
-        <StyleDataGrid rows={rows} columns={columns}                             
+        <StyleDataGrid rows={tableData} columns={columns}                        
           checkboxSelection 
           sx={{ 
             backgroundColor: 'white'
@@ -95,7 +96,7 @@ export default function ReservationFirstStep() {
             `super-app-theme--${params.row.state}`
           }
           isRowSelectable={(params) => 
-            params.row.state === true
+            params.row.state === false
           }
           onRowSelectionModelChange={(newRowSelectionModel) => {
             setRowSelectionModel(newRowSelectionModel);
