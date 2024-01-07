@@ -21,13 +21,17 @@ class ReservationService {
 
     async getAllReservationTimes(onlyActive) {
         return await axios.get(API_URL + "ReservationTime/get-all-reservation-times", {
-            onlyActive
+            params: {
+                onlyActive : onlyActive
+            }            
         });
     }
 
-    async getReservationForSelectedDay(selectedDay) {
-        return await axios.get(API_URL + "ReservationTime/get-reservation-for-selected-day", {
-            selectedDay
+    async getReservationForSelectedDate(selectedDate) {
+        return await axios.get(API_URL + "GymReservation/get-reservation-for-selected-date", {
+            params: {
+                selectedDate : selectedDate
+            }
         });
     }
 }

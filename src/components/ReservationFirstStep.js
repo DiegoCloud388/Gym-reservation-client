@@ -4,7 +4,6 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import dayjs from 'dayjs';
 import { DataGrid } from '@mui/x-data-grid';
 import { darken, lighten, styled } from '@mui/material/styles';
-import { useEffect } from 'react';
 
 import ReservationService from '../services/reservation.service';
 
@@ -20,7 +19,7 @@ const columns = [
         width: 150
     },
     {
-        field: 'state',
+        field: 'isReserved',
         headerName: 'Stav',
         width: 200,
         type: 'boolean'
@@ -42,7 +41,7 @@ const getHoverBackgroundColor = (color, mode) =>
   mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
 
 const StyleDataGrid = styled(DataGrid)(({theme}) => ({  
-    '& .super-app-theme--false': {
+    '& .super-app-theme--true': {
       backgroundColor: getBackgroundColor(
         theme.palette.grey[500], 
         theme.palette.mode),
@@ -57,27 +56,44 @@ const StyleDataGrid = styled(DataGrid)(({theme}) => ({
 
 export default function ReservationFirstStep() {
 
-  const [date, setDate] = React.useState(Date());
+  const [date, setDate] = React.useState(new Date());
   const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
   const [tableData, setTableData] = React.useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await ReservationService.getReservationForSelectedDay(date.format());
-        setTableData(result.data);
-      } catch (error) {
+  async function handlerChangeDate(newDate) {
+    setDate(newDate);
 
+    try {
+      var selectedDate = dayjs(newDate).format('YYYY-MM-DD');
+      var result = await fetchData(selectedDate);
+      if (result && result.data) {
+        setTableData(result.data);
+      } else {
+        // Handle the case where result or result.data is undefined
+        console.error("Invalid result or result.data");
       }
-    };
-    fetchData();
-  }, date, []);
+    } catch (error) {
+      // Handle other errors that may occur during fetchData
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  async function fetchData(selectedDate) {        
+    try {        
+      const result = await ReservationService.getReservationForSelectedDate(selectedDate);
+      return result;
+    } catch (error) {
+      // Handle errors that may occur during the API call
+      console.error("Error fetching reservation times:", error);
+      throw error; // Re-throw the error to be caught by the calling function
+    }
+  };
 
   return(
     <Grid container alignItems="left" spacing={2}>
       <Grid item sm={0} md={0} xl={3}>
         <StaticDatePicker              
-          onChange={(newDate) => setDate(newDate)}
+          onChange={(newDate) => handlerChangeDate(newDate)}
           date={date}
           defaultValue={dayjs(date)}
           displayStaticWrapperAs="desktop" 
@@ -93,10 +109,10 @@ export default function ReservationFirstStep() {
             backgroundColor: 'white'
           }} 
           getRowClassName={(params) => 
-            `super-app-theme--${params.row.state}`
+            `super-app-theme--${params.row.isReserved}`
           }
           isRowSelectable={(params) => 
-            params.row.state === false
+            params.row.isReserved === false
           }
           onRowSelectionModelChange={(newRowSelectionModel) => {
             setRowSelectionModel(newRowSelectionModel);
